@@ -56,6 +56,18 @@
       let ready = []
       let position
       if (chooseknots[0]) {
+        let count = 0
+        for (let knot of knots.slice()) {
+          if (knot) {
+            break
+          } else {
+            count += 1
+          }
+        }
+        if (chooseknots.length <= count) {
+          screws[index].splice(0, chooseknots.length, ...chooseknots.slice())
+          chooseknots = []
+        }
       } else {
         let idx = 0
         for (let knot of knots.slice()) {
