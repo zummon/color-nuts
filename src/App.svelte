@@ -42,10 +42,14 @@
     if (!colors[0]){
       colors = ['#ef4444','#f59e0b','#84cc16','#14b8a6','#3b82f6','#8b5cf6']
     } 
-    if (!sizes[0]) {
+    if (sizes[0]) {
+      sizes = sizes.map((size) => isNaN(size) ? 4 : Number(size))
+    } else {
       sizes = [4,4,4,4,4,4]
     }
-    if (!extras[0]) {
+    if (extras[0]) {
+      extras = extras.map((extra) => isNaN(extra) ? 4 : Number(extra))
+    } else {
       extras = [4,4]
     }
     shuffle({ colors, sizes, extras });
@@ -57,7 +61,7 @@
     {#each chooseknots as knot}
       <span
         class="h-16 w-8 rounded-full"
-        style="background-color: {knot || '#9ca3af'};"
+        style="background-color: {knot || 'transparent'};"
       ></span>
     {:else}
       <span class="h-16 w-8 rounded-full"></span>
@@ -66,23 +70,30 @@
 </div>
 
 <div class="flex flex-wrap gap-4 px-4">
-  {#each screws as { knots, size }, index (index)}
+  {#each screws as screw, index (index)}
     <button
-      class="flex flex-col gap-2"
+      class="flex flex-col items-center gap-2 relative"
       onclick={() => {
         if (chooseknots[0]) {
-          let part = chooseknots.pop()
-          screws[index].knots.push(part)
+          let part = chooseknots[0]
+          if ((!screw.knots[0] || part == screw.knots[0]) && screw.knots.length < screw.size) {
+            screws[index].knots.unshift(part)
+            chooseknots.pop()
+          }
         } else {
-          let part = screws[index].knots.pop()
-          chooseknots.push(part)
+          let part = screw.knots[0]
+          if (part) {
+            chooseknots.push(part)
+            screws[index].knots.shift()
+          }
         }
       }}
     >
-      {#each new Array(size) as _, idx (`${index}-${idx}`)}
+      <span class="absolute w-6 h-full bg-gray-300 z-0"></span>
+      {#each new Array(screw.size) as _, idx (`${index}-${idx}`)}
         <span
-          class="h-8 w-16 rounded-full"
-          style="background-color: {knots[idx] || '#9ca3af'};"
+          class="h-8 w-16 rounded-full z-10 shadow"
+          style="background-color: {screw.knots[idx] || 'transparent'};"
         ></span>
       {/each}
     </button>
