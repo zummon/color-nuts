@@ -40,7 +40,7 @@
     let sizes = params.getAll('size')
     let extras = params.getAll('extra')
     if (!colors[0]){
-      colors = ['#ef4444','#f59e0b','#84cc16','#14b8a6','#3b82f6','#8b5cf6']
+      colors = ["#FF69B4","#FFD700","#00FFFF","#008000","#800080","#FFA500"]
     } 
     if (sizes[0]) {
       sizes = sizes.map((size) => isNaN(size) ? 4 : Number(size))
@@ -89,7 +89,7 @@
         }
       }}
     >
-      <span class="absolute w-6 h-full bg-gray-300 z-0"></span>
+      <span class="absolute w-6 h-full bg-zinc-300 z-0"></span>
       {#each new Array(screw.size) as _, idx (`${index}-${idx}`)}
         <span
           class="h-8 w-16 rounded-full z-10 shadow"
