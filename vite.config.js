@@ -1,4 +1,3 @@
-// Rename to .mjs extension and update imports
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 

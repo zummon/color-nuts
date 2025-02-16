@@ -3,6 +3,7 @@
 
   let chooseknots = $state([]);
   let screws = $state([]);
+	let chosenpipe = $state()
 
   function shuffle({ colors, sizes, extras }) {
     let array = []
@@ -36,9 +37,9 @@
   }
   onMount(() => {
     let params = new URLSearchParams(location.search)
-    let colors = params.getAll('color')
-    let sizes = params.getAll('size')
-    let extras = params.getAll('extra')
+    let colors = params.get('color')?.split(',') || [];
+    let sizes = params.get('size')?.split(',') || [];
+    let extras = params.get('extra')?.split(',') || [];
     if (!colors[0]){
       colors = ["#FF69B4","#FFD700","#00FFFF","#008000","#800080","#FFA500"]
     } 
@@ -50,7 +51,7 @@
     if (extras[0]) {
       extras = extras.map((extra) => isNaN(extra) ? 4 : Number(extra))
     } else {
-      extras = [4,4]
+      extras = [4,2]
     }
     shuffle({ colors, sizes, extras });
   });
@@ -69,33 +70,34 @@
   </div>
 </div>
 
-<div class="flex flex-wrap gap-4 px-4">
+<div class="flex flex-wrap justify-center gap-4 px-4">
   {#each screws as screw, index (index)}
-    <button
-      class="flex flex-col items-center gap-2 relative"
-      onclick={() => {
-        if (chooseknots[0]) {
-          let part = chooseknots[0]
-          if ((!screw.knots[0] || part == screw.knots[0]) && screw.knots.length < screw.size) {
-            screws[index].knots.unshift(part)
-            chooseknots.pop()
-          }
-        } else {
-          let part = screw.knots[0]
-          if (part) {
-            chooseknots.push(part)
-            screws[index].knots.shift()
-          }
-        }
-      }}
-    >
-      <span class="absolute w-6 h-full bg-zinc-300 z-0"></span>
-      {#each new Array(screw.size) as _, idx (`${index}-${idx}`)}
-        <span
-          class="h-8 w-16 rounded-full z-10 shadow"
-          style="background-color: {screw.knots[idx] || 'transparent'};"
-        ></span>
-      {/each}
-    </button>
+		<button
+			class="flex flex-col items-center justify-end relative cursor-pointer"
+			onclick={() => {
+				if (chooseknots[0]) {
+					let part = chooseknots[0]
+					if ((!screw.knots[0] || part == screw.knots[0]) && screw.knots.length < screw.size) {
+						screws[index].knots.unshift(part)
+						chooseknots.pop()
+					}
+				} else {
+					let part = screw.knots[0]
+					if (part) {
+						chooseknots.push(part)
+						screws[index].knots.shift()
+					}
+				}
+			}}
+		>
+			<span class="absolute w-4 bg-zinc-400 z-0 rounded-t-md" style="height: {(screw.size * 2.5) + 1}rem"></span>
+			{#each new Array(screw.size) as _, idx (`${index}-${idx}`)}
+				<span
+					class="{screw.knots[idx] ? 'h-8 mt-2 rounded-full shadow' : 'h-0'} w-16 z-10"
+					style="background-color: {screw.knots[idx] || 'transparent'};"
+				></span>
+			{/each}
+			<span class="h-4 w-16 bg-zinc-400 rounded-md z-0"></span>
+		</button>
   {/each}
 </div>

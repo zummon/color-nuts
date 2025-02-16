@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- https://unpkg.com/@tailwindcss/browser@4 -->
+		<script src="https://unpkg.com/@tailwindcss/browser@4.0.6/dist/index.global.js"></script>
+		<style type="text/tailwindcss">
+      @theme {
+        
+      }
+    </style>
     <title>color nuts</title>
   </head>
   <body class="bg-zinc-800">
     <div class="h-svh flex flex-col justify-center items-center gap-4">
+			<div class="text-center text-white p-4 text-lg flex flex-wrap justify-center gap-4">
+				<a class="" href="https://youtu.be/8puTMO_Wjwg?si=7VmaAQ1FKyHbk57-&t=12" target="_blank">
+					<span class="underline underline-offset-2">Video</span>
+				</a>
+				<details class="group tracking-wide">
+					<summary class="cursor-pointer group-open:text-zinc-300 group-open:mb-4">How to play</summary>
+					You have tubes filled with colored nuts. <br>
+					Your goal is to sort them so each tube contains only one color. <br>
+					You can only move the top nut from one tube to another.
+				</details>
+			</div>
       <div class="flex flex-col justify-center items-center gap-4" id="app"></div>
-      <div class="text-center text-zinc-400">
+      <div class="text-center text-zinc-300 p-4">
         Made by Teerapat Anantarattanachai<br />
         Something breaks, needs upgrade. Let me know
       </div>
