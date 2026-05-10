@@ -1,14 +1,14 @@
 <script>
   import { onMount } from "svelte";
-  import { crossfade, fly, fade } from 'svelte/transition';
-  import { cubicOut } from 'svelte/easing';
+  import { crossfade, fly, fade } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
 
   const [send, receive] = crossfade({
     duration: 300,
     easing: cubicOut,
     fallback(node, params) {
       return fade(node, { duration: 300 });
-    }
+    },
   });
 
   let chooseknots = $state([]);
@@ -122,28 +122,51 @@
         class="flex flex-col items-center justify-end relative cursor-pointer"
         style="height: {screw.size * 2.5 + 2}rem; width: 5rem;"
         onclick={() => {
-          if (chooseknots[0]) {
-            let part = chooseknots[0];
-            if (
-              (!screw.knots[0] || part.color == screw.knots[0].color) &&
-              screw.knots.length < screw.size
-            ) {
-              screws[index].knots.unshift(part);
-              chooseknots.pop();
-              chosenpipe = null;
+          if (chooseknots.length > 0) {
+            let color = chooseknots[0].color;
+            let isValidColor =
+              !screw.knots[0] || screw.knots[0].color === color;
+            let available = screw.size - screw.knots.length;
+
+            if (isValidColor && available > 0 && index !== chosenpipe) {
+              let toPlace = Math.min(chooseknots.length, available);
+              let placedKnots = chooseknots.splice(
+                chooseknots.length - toPlace,
+                toPlace,
+              );
+              screws[index].knots = [...placedKnots, ...screws[index].knots];
             }
+
+            if (chooseknots.length > 0) {
+              screws[chosenpipe].knots = [
+                ...chooseknots,
+                ...screws[chosenpipe].knots,
+              ];
+            }
+
+            chooseknots = [];
+            chosenpipe = null;
           } else {
-            let part = screw.knots[0];
-            if (part) {
-              chooseknots.push(part);
-              screws[index].knots.shift();
+            if (screw.knots.length > 0) {
+              let color = screw.knots[0].color;
+              let count = 0;
+              for (let i = 0; i < screw.knots.length; i++) {
+                if (screw.knots[i].color === color) {
+                  count++;
+                } else {
+                  break;
+                }
+              }
+              chooseknots = screw.knots.splice(0, count);
               chosenpipe = index;
             }
           }
         }}
       >
-        <div class="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
-          {#each (chosenpipe === index ? chooseknots : []) as knot (knot.id)}
+        <div
+          class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center w-full"
+        >
+          {#each chosenpipe === index ? chooseknots : [] as knot (knot.id)}
             <span
               in:receive={{ key: knot.id }}
               out:send={{ key: knot.id }}
@@ -179,7 +202,7 @@
   {#if !isWin}
     <div class="mt-4 flex gap-4">
       <button
-        class="px-6 py-3 bg-white hover:bg-slate-100 text-slate-600 font-bold rounded-2xl shadow-sm border-2 border-slate-200 transition-colors flex items-center gap-2"
+        class="px-6 py-3 bg-white hover:bg-slate-100 text-slate-600 font-bold rounded-2xl shadow-sm border-2 border-slate-200 transition-colors flex items-center gap-2 cursor-pointer"
         onclick={restartLevel}
       >
         <svg
@@ -196,7 +219,7 @@
             d="M3 3v5h5"
           /></svg
         >
-        Restart Level
+        Restart
       </button>
     </div>
   {/if}
@@ -211,13 +234,13 @@
       >
         <div class="text-6xl">🎉</div>
         <h2 class="text-3xl font-black text-slate-800 text-center">
-          Level Completed!
+          Completed!
         </h2>
         <p class="text-slate-500 text-center font-medium">
           You sorted all the colors perfectly.
         </p>
         <button
-          class="w-full mt-2 px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl transition-transform hover:scale-[1.02] active:scale-95 text-lg shadow-sm"
+          class="w-full mt-2 px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl transition-transform hover:scale-[1.02] active:scale-95 text-lg shadow-sm cursor-pointer"
           onclick={() => shuffle(gameConfig)}
         >
           Play Again
