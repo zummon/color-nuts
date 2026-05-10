@@ -200,9 +200,9 @@
   </div>
 
   {#if !isWin}
-    <div class="mt-4 flex gap-4">
+    <div class="mt-8 flex gap-4">
       <button
-        class="px-6 py-3 bg-white hover:bg-slate-100 text-slate-600 font-bold rounded-2xl shadow-sm border-2 border-slate-200 transition-colors flex items-center gap-2 cursor-pointer"
+        class="px-6 py-3 bg-stone-800/80 hover:bg-stone-700 text-stone-200 font-semibold rounded-2xl shadow-lg shadow-black/20 border border-stone-600/50 transition-all flex items-center gap-2 cursor-pointer backdrop-blur-md"
         onclick={restartLevel}
       >
         <svg
@@ -221,26 +221,62 @@
         >
         Restart
       </button>
+      <button
+        class="px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-2xl shadow-lg shadow-orange-900/40 border border-orange-500/30 transition-all flex items-center gap-2 cursor-pointer"
+        onclick={() => shuffle(gameConfig)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><path
+            d="M16 8h.01"
+          /><path d="M8 8h.01" /><path d="M8 16h.01" /><path
+            d="M16 16h.01"
+          /><path d="M12 12h.01" /></svg
+        >
+        New Game
+      </button>
     </div>
   {/if}
 
   {#if isWin}
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
     >
       <div
-        class="bg-white p-8 rounded-3xl shadow-xl flex flex-col items-center gap-6 max-w-sm w-full mx-4 border-2 border-slate-100"
+        class="bg-gradient-to-b from-stone-800 to-stone-900 p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-6 max-w-sm w-full mx-4 border border-stone-700/50 relative overflow-hidden"
         in:fly={{ y: 50, duration: 400, easing: cubicOut }}
       >
-        <div class="text-6xl">🎉</div>
-        <h2 class="text-3xl font-black text-slate-800 text-center">
+        <div
+          class="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/20 blur-3xl rounded-full pointer-events-none"
+        ></div>
+        <div
+          class="absolute -bottom-24 -right-24 w-48 h-48 bg-amber-500/20 blur-3xl rounded-full pointer-events-none"
+        ></div>
+
+        <div
+          class="text-7xl drop-shadow-xl z-10 animate-bounce"
+          style="animation-duration: 2s;"
+        >
+          🎉
+        </div>
+        <h2
+          class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300 text-center z-10"
+        >
           Completed!
         </h2>
-        <p class="text-slate-500 text-center font-medium">
+        <p class="text-stone-400 text-center font-medium z-10">
           You sorted all the colors perfectly.
         </p>
         <button
-          class="w-full mt-2 px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl transition-transform hover:scale-[1.02] active:scale-95 text-lg shadow-sm cursor-pointer"
+          class="w-full mt-2 px-6 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-95 text-lg shadow-lg shadow-orange-900/30 border border-orange-500/30 z-10 cursor-pointer"
           onclick={() => shuffle(gameConfig)}
         >
           Play Again
