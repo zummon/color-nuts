@@ -11,6 +11,34 @@
     },
   });
 
+  const difficulties = {
+    easy: {
+      colors: ["#FF69B4", "#FFD700", "#00FFFF", "#008000"],
+      sizes: [4, 4, 4, 4],
+      extras: [4, 4],
+    },
+    normal: {
+      colors: ["#FF69B4", "#FFD700", "#00FFFF", "#008000", "#800080", "#FFA500"],
+      sizes: [4, 4, 4, 4, 4, 4],
+      extras: [4, 4],
+    },
+    hard: {
+      colors: [
+        "#FF69B4",
+        "#FFD700",
+        "#00FFFF",
+        "#008000",
+        "#800080",
+        "#FFA500",
+        "#FF4500",
+        "#4B0082",
+      ],
+      sizes: [4, 4, 4, 4, 4, 4, 4, 4],
+      extras: [4, 2],
+    },
+  };
+
+  let currentDifficulty = $state("normal");
   let chooseknots = $state([]);
   let screws = $state([]);
   let chosenpipe = $state();
@@ -21,6 +49,12 @@
     chooseknots = [];
     chosenpipe = null;
     screws = JSON.parse(JSON.stringify(initialScrews));
+  }
+
+  function setDifficulty(level) {
+    currentDifficulty = level;
+    gameConfig = difficulties[level];
+    shuffle(gameConfig);
   }
 
   let isWin = $derived.by(() => {
@@ -87,36 +121,57 @@
   }
   onMount(() => {
     let params = new URLSearchParams(location.search);
+    let diff = params.get("difficulty");
+    if (difficulties[diff]) {
+      currentDifficulty = diff;
+    }
+
     let colors = params.get("color")?.split(",") || [];
     let sizes = params.get("size")?.split(",") || [];
     let extras = params.get("extra")?.split(",") || [];
-    if (!colors[0]) {
-      colors = [
-        "#FF69B4",
-        "#FFD700",
-        "#00FFFF",
-        "#008000",
-        "#800080",
-        "#FFA500",
-      ];
-    }
-    if (sizes[0]) {
-      sizes = sizes.map((size) => (isNaN(size) ? 4 : Number(size)));
+
+    if (colors[0] || sizes[0] || extras[0]) {
+      // Custom config from URL
+      if (!colors[0]) {
+        colors = difficulties[currentDifficulty].colors;
+      }
+      if (sizes[0]) {
+        sizes = sizes.map((size) => (isNaN(size) ? 4 : Number(size)));
+      } else {
+        sizes = difficulties[currentDifficulty].sizes;
+      }
+      if (extras[0]) {
+        extras = extras.map((extra) => (isNaN(extra) ? 4 : Number(extra)));
+      } else {
+        extras = difficulties[currentDifficulty].extras;
+      }
+      gameConfig = { colors, sizes, extras };
     } else {
-      sizes = [4, 4, 4, 4, 4, 4];
+      gameConfig = difficulties[currentDifficulty];
     }
-    if (extras[0]) {
-      extras = extras.map((extra) => (isNaN(extra) ? 4 : Number(extra)));
-    } else {
-      extras = [4, 2];
-    }
-    gameConfig = { colors, sizes, extras };
+
     shuffle(gameConfig);
   });
 </script>
 
-<div class="flex flex-col items-center pt-12 gap-12">
-  <div class="flex flex-wrap justify-center gap-6 px-4 max-w-4xl mt-16">
+<div class="flex flex-col items-center pt-8 gap-8">
+  <div
+    class="flex p-1.5 bg-stone-900/60 backdrop-blur-md border border-stone-700/50 rounded-2xl shadow-xl z-20"
+  >
+    {#each Object.keys(difficulties) as level}
+      <button
+        onclick={() => setDifficulty(level)}
+        class="px-8 py-2.5 rounded-xl font-bold transition-all cursor-pointer capitalize text-sm tracking-wide
+        {currentDifficulty === level
+          ? 'bg-linear-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-900/20 scale-100'
+          : 'text-stone-500 hover:text-stone-300 hover:bg-white/5'}"
+      >
+        {level}
+      </button>
+    {/each}
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-6 px-4 max-w-4xl">
     {#each screws as screw, index (index)}
       <button
         class="flex flex-col items-center justify-end relative cursor-pointer"
