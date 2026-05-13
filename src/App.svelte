@@ -222,7 +222,7 @@
         Restart
       </button>
       <button
-        class="px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-2xl shadow-lg shadow-orange-900/40 border border-orange-500/30 transition-all flex items-center gap-2 cursor-pointer"
+        class="px-6 py-3 bg-linear-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-2xl shadow-lg shadow-orange-900/40 border border-orange-500/30 transition-all flex items-center gap-2 cursor-pointer"
         onclick={() => shuffle(gameConfig)}
       >
         <svg
@@ -251,7 +251,7 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
     >
       <div
-        class="bg-gradient-to-b from-stone-800 to-stone-900 p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-6 max-w-sm w-full mx-4 border border-stone-700/50 relative overflow-hidden"
+        class="bg-linear-to-b from-stone-800 to-stone-900 p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-6 max-w-sm w-full mx-4 border border-stone-700/50 relative overflow-hidden"
         in:fly={{ y: 50, duration: 400, easing: cubicOut }}
       >
         <div
@@ -268,7 +268,7 @@
           🎉
         </div>
         <h2
-          class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300 text-center z-10"
+          class="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-orange-400 to-amber-300 text-center z-10"
         >
           Completed!
         </h2>
@@ -276,7 +276,7 @@
           You sorted all the colors perfectly.
         </p>
         <button
-          class="w-full mt-2 px-6 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-95 text-lg shadow-lg shadow-orange-900/30 border border-orange-500/30 z-10 cursor-pointer"
+          class="w-full mt-2 px-6 py-4 bg-linear-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-95 text-lg shadow-lg shadow-orange-900/30 border border-orange-500/30 z-10 cursor-pointer"
           onclick={() => shuffle(gameConfig)}
         >
           Play Again
