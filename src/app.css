@@ -1,1 +1,563 @@
-@import "tailwindcss";
+/* Custom Global Variables & Themes */
+:root {
+	/* Cute Warm Light Theme Variables */
+	--bg-color: #fdfaf6;
+	--text-color: #5c4a43;
+	--text-muted: #8c766c;
+	--card-bg: rgba(255, 255, 255, 0.75);
+	--card-border: rgba(214, 193, 177, 0.4);
+	--accent-gradient: linear-gradient(135deg, #ff8a65, #ffb74d);
+	--button-secondary-bg: rgba(230, 215, 203, 0.6);
+	--button-secondary-hover: rgba(214, 193, 177, 0.8);
+	--shaft-gradient: linear-gradient(to right, #d7ccc8, #efebe9, #d7ccc8);
+	--base-gradient: linear-gradient(to bottom, #efebe9, #d7ccc8);
+	--shadow-color: rgba(92, 74, 67, 0.1);
+	--ambient-1: rgba(255, 138, 101, 0.15);
+	--ambient-2: rgba(255, 183, 77, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* Cute Warm Dark Theme Variables */
+		--bg-color: #1e1a17;
+		--text-color: #f5ebe6;
+		--text-muted: #bcaba0;
+		--card-bg: rgba(43, 36, 32, 0.7);
+		--card-border: rgba(92, 74, 67, 0.5);
+		--accent-gradient: linear-gradient(135deg, #ff7043, #ffa726);
+		--button-secondary-bg: rgba(59, 49, 44, 0.8);
+		--button-secondary-hover: rgba(78, 64, 58, 0.9);
+		--shaft-gradient: linear-gradient(to right, #5d4037, #8d6e63, #5d4037);
+		--base-gradient: linear-gradient(to bottom, #6d4c41, #4e342e);
+		--shadow-color: rgba(0, 0, 0, 0.4);
+		--ambient-1: rgba(255, 112, 67, 0.1);
+		--ambient-2: rgba(255, 167, 38, 0.1);
+	}
+}
+
+/* Base Body Styles Reset */
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	font-family: 'Fredoka', 'Quicksand', system-ui, -apple-system, sans-serif;
+	transition: background-color 0.4s ease, color 0.4s ease;
+	overflow-x: hidden;
+	position: relative;
+	min-height: 100vh;
+}
+
+/* Custom Selection Glow */
+::selection {
+	background-color: rgba(255, 167, 38, 0.3);
+	color: var(--text-color);
+}
+
+/* Warm Ambient Glow Effects */
+body::before,
+body::after {
+	content: "";
+	position: fixed;
+	width: 45vw;
+	height: 45vw;
+	border-radius: 50%;
+	filter: blur(100px);
+	pointer-events: none;
+	z-index: 0;
+	animation: pulseAmbient 8s ease-in-out infinite alternate;
+}
+
+body::before {
+	top: -10%;
+	left: -10%;
+	background: var(--ambient-1);
+}
+
+body::after {
+	bottom: -10%;
+	right: -10%;
+	background: var(--ambient-2);
+	animation-delay: -4s;
+}
+
+@keyframes pulseAmbient {
+	0% {
+		transform: scale(1) translate(0, 0);
+	}
+
+	100% {
+		transform: scale(1.15) translate(3%, 3%);
+	}
+}
+
+/* Base Layout App Container */
+#app {
+	position: relative;
+	z-index: 1;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+/* Cute UI Element Styles & Custom CSS classes */
+.game-header {
+	width: 100%;
+	max-width: 960px;
+	padding: 2rem 1.5rem 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	z-index: 10;
+}
+
+@media (min-width: 768px) {
+	.game-header {
+		flex-direction: row;
+	}
+}
+
+.game-title {
+	font-size: 3.2rem;
+	font-weight: 900;
+	margin: 0;
+	background: var(--accent-gradient);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	letter-spacing: -1px;
+	filter: drop-shadow(0 2px 4px var(--shadow-color));
+	animation: floatTitle 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatTitle {
+	0% {
+		transform: translateY(0);
+	}
+
+	100% {
+		transform: translateY(-4px);
+	}
+}
+
+.controls-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+}
+
+/* Cute Select Styling */
+.select-container {
+	position: relative;
+}
+
+.cute-select {
+	appearance: none;
+	background: var(--card-bg);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 2px solid var(--card-border);
+	border-radius: 16px;
+	padding: 0.6rem 2.5rem 0.6rem 1.2rem;
+	font-weight: 700;
+	color: var(--text-color);
+	cursor: pointer;
+	outline: none;
+	font-size: 0.95rem;
+	text-transform: capitalize;
+	box-shadow: 0 8px 16px var(--shadow-color);
+	transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cute-select:hover {
+	transform: translateY(-2px);
+	border-color: #ffb74d;
+}
+
+.select-icon {
+	position: absolute;
+	right: 0.8rem;
+	top: 50%;
+	transform: translateY(-50%);
+	pointer-events: none;
+	color: var(--text-muted);
+	display: flex;
+}
+
+/* Cute Buttons */
+.cute-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 1.2rem;
+	background: var(--button-secondary-bg);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 2px solid var(--card-border);
+	border-radius: 16px;
+	font-weight: 700;
+	color: var(--text-color);
+	cursor: pointer;
+	box-shadow: 0 8px 16px var(--shadow-color);
+	transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	font-size: 0.95rem;
+}
+
+.cute-btn:hover {
+	transform: translateY(-2px);
+	background: var(--button-secondary-hover);
+}
+
+.cute-btn:active {
+	transform: translateY(1px);
+}
+
+.cute-btn-primary {
+	background: var(--accent-gradient);
+	color: #fff;
+	border: none;
+	padding: 0.75rem 1.5rem;
+	font-size: 1.05rem;
+}
+
+.cute-btn-primary:hover {
+	background: var(--accent-gradient);
+	filter: brightness(1.08);
+	box-shadow: 0 10px 20px rgba(255, 112, 67, 0.3);
+}
+
+/* Main Container Framework */
+.game-main {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	z-index: 10;
+}
+
+.screws-grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 2rem;
+	padding: 2rem 1rem;
+	max-width: 900px;
+}
+
+/* Cute Screw and Bolt Item Layouts */
+.screw-button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	position: relative;
+	cursor: pointer;
+	background: none;
+	border: none;
+	padding: 0;
+	outline: none;
+}
+
+/* Floating Selected Section */
+.chosen-container {
+	position: absolute;
+	bottom: 100%;
+	margin-bottom: 0.5rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 50;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+/* Cute Warm Nuts Style */
+.nut-element {
+	height: 2rem;
+	margin-top: 0.3rem;
+	border-radius: 12px;
+	position: relative;
+	width: 4rem;
+	z-index: 10;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 -3px 0px rgba(0, 0, 0, 0.2);
+	display: block;
+	overflow: hidden;
+	box-sizing: border-box;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.nut-highlight {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 60%);
+}
+
+.nut-floating {
+	animation: nutFloat 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes nutFloat {
+	0% {
+		transform: translateY(0px) rotate(0deg);
+	}
+
+	100% {
+		transform: translateY(-6px) rotate(1deg);
+	}
+}
+
+/* Polished Shaft and Base elements */
+.screw-shaft {
+	position: absolute;
+	width: 1.2rem;
+	z-index: 0;
+	border-radius: 10px 10px 0 0;
+	bottom: 0.8rem;
+	background: var(--shaft-gradient);
+	box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.1), 4px 4px 10px var(--shadow-color);
+}
+
+.shaft-shine {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 3px;
+	width: 3px;
+	background: rgba(255, 255, 255, 0.5);
+	filter: blur(1px);
+}
+
+.nuts-stack {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	width: 100%;
+	z-index: 10;
+	margin-bottom: 0.25rem;
+}
+
+.screw-base {
+	height: 1.2rem;
+	width: 5.5rem;
+	border-radius: 10px;
+	z-index: 0;
+	position: relative;
+	background: var(--base-gradient);
+	box-shadow: 0 6px 12px var(--shadow-color), inset 0 2px 2px rgba(255, 255, 255, 0.4);
+	overflow: hidden;
+}
+
+.base-shine {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Action Center Controls */
+.actions-footer {
+	margin-top: 1.5rem;
+	display: flex;
+	gap: 1rem;
+}
+
+/* Cute Popups/Dialogs Backdrop Framework */
+.popup-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+}
+
+.popup-card {
+	background: var(--card-bg);
+	border: 2px solid var(--card-border);
+	backdrop-filter: blur(24px);
+	-webkit-backdrop-filter: blur(24px);
+	padding: 2rem;
+	border-radius: 28px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 1px 0px var(--card-border);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.5rem;
+	max-width: 380px;
+	width: 100%;
+	box-sizing: border-box;
+	position: relative;
+	overflow: hidden;
+	margin: 0 1rem;
+}
+
+.popup-card-large {
+	max-width: 440px;
+	align-items: stretch;
+}
+
+.popup-title {
+	font-size: 2rem;
+	font-weight: 900;
+	margin: 0;
+	background: var(--accent-gradient);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	text-align: center;
+}
+
+.popup-desc {
+	color: var(--text-muted);
+	text-align: center;
+	font-weight: 500;
+	margin: 0;
+	line-height: 1.5;
+}
+
+/* Cute Dialog elements rules */
+dialog {
+	background: transparent;
+	border: none;
+	outline: none;
+	padding: 0;
+	overflow: visible;
+	position: fixed;
+	inset: 0;
+	margin: auto;
+}
+
+dialog::backdrop {
+	background: rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+}
+
+.dialog-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.close-dialog-btn {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--text-muted);
+	padding: 0.4rem;
+	border-radius: 50%;
+	display: flex;
+	transition: background 0.2s;
+}
+
+.close-dialog-btn:hover {
+	background: var(--button-secondary-hover);
+	color: var(--text-color);
+}
+
+.video-link-wrapper {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0.5rem;
+}
+
+.guide-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.step-item {
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.step-number {
+	flex-shrink: 0;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	background: rgba(255, 112, 67, 0.15);
+	color: #ff7043;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 800;
+	border: 1px solid rgba(255, 112, 67, 0.25);
+}
+
+.step-text {
+	margin: 0;
+	color: var(--text-color);
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.highlight-text {
+	color: #ffa726;
+	font-weight: 700;
+}
+
+/* Footer Section styling */
+.game-footer {
+	text-align: center;
+	color: var(--text-muted);
+	padding: 2rem 1rem;
+	margin-top: 1.5rem;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.game-footer p {
+	margin: 0;
+	font-weight: 500;
+	font-size: 0.9rem;
+}
+
+.game-footer p+p {
+	margin-top: 0.5rem;
+	font-size: 0.75rem;
+}
+
+.footer-link {
+	color: var(--text-color);
+	text-decoration: none;
+	font-weight: 700;
+	transition: color 0.2s;
+}
+
+.footer-link:hover {
+	color: #ffa726;
+	text-decoration: underline;
+}
+
+/* Celebration bounce */
+.celebrate-emoji {
+	font-size: 4.5rem;
+	animation: bounceCute 2s infinite ease-in-out;
+}
+
+@keyframes bounceCute {
+
+	0%,
+	100% {
+		transform: translateY(0) scale(1);
+	}
+
+	50% {
+		transform: translateY(-20px) scale(1.05);
+	}
+}
